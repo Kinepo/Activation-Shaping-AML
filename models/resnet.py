@@ -12,8 +12,12 @@ class BaseResNet18(nn.Module):
         return self.resnet(x)
 
 def activation_shaping_hook(module, input, output):
-  "test pull"
-  return None
+  z = torch.mul(input,ouput)
+  for i in range(z.size()[0]):
+    for j in range(z.size()[1]):
+      if z[i][j] != 0.0:
+        z[i][j] = 1.0
+  return z
 
 
 
