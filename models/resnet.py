@@ -19,7 +19,13 @@ def activation_shaping_hook(module, input, output):
         z[i][j] = 1.0
   return z
 
-
+class ASHResNet18(nn.Module):
+    def __init__(self):
+        super(ASHResNet18, self).__init__()
+        ...
+    
+    def forward(self, x):
+        ...
 
 
 ######################################################
