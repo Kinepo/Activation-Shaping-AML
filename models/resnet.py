@@ -12,7 +12,7 @@ class BaseResNet18(nn.Module):
         return self.resnet(x)
 
 def activation_shaping_hook(module, input, output):
-  "ok test"
+  "2 test"
   return None
 
 
