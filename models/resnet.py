@@ -14,6 +14,8 @@ class BaseResNet18(nn.Module):
         return output
 
     def forward(self, x):
+        target_layer = self.resnet.layer4[0].bn1
+        target_layer.register_forward_hook(self.hook())
         return self.resnet(x)
 
 
