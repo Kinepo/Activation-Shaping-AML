@@ -9,6 +9,10 @@ class BaseResNet18(nn.Module):
         self.resnet = resnet18(weights=ResNet18_Weights)
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, 7)
 
+    def hook(model, input, output):
+        print("coucou")
+        return output
+
     def forward(self, x):
         return self.resnet(x)
 
