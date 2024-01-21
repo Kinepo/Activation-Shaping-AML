@@ -16,14 +16,19 @@ class BaseResNet18(nn.Module):
 def activation_shaping():
     def activation_shaping_hook(module, input, output):
         # attention random M à modifier
-        M = torch.randint(0,2,(output.size()[0], output.size()[1]))
+        M = torch.randint(0,2,output.size())
+        M = M.cuda()
         Z = torch.mul(output, M)
+        Z = torch.where(Z > 0, 1.0, 0.0)
+        Z = Z.cuda()
+        """
         for i in range(Z.size()[0]):
             for j in range(Z.size()[1]):
                 if Z[i][j] != 0.0:
                     Z[i][j] = 1.0
         return Z
-    return activation_shaping_hook()
+        """
+    return activation_shaping_hook
     
 # Attach hook (activation_shaping_hook)
 def call_activation_shaping_hook(self):
