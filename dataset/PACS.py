@@ -1,7 +1,7 @@
 import torch
 import os
 import torchvision.transforms as T
-from dataset.utils import BaseDataset #, DomainAdaptationDataset, DomainGeneralizationDataset
+from dataset.utils import BaseDataset, DomainAdaptationDataset  # , DomainAdaptationDataset, DomainGeneralizationDataset
 from dataset.utils import SeededDataLoader
 
 from globals import CONFIG
@@ -48,7 +48,7 @@ def load_data():
             path, label = line[0].split('/')[1:], int(line[1])
             target_examples.append((os.path.join(CONFIG.dataset_args['root'], *path), label))
 
-        train_dataset = BaseDataset(source_examples, transform=train_transform)
+        train_dataset = DomainAdaptationDataset(source_examples, target_examples, transform=train_transform)
         test_dataset = BaseDataset(target_examples, transform=test_transform)
 
     ######################################################
