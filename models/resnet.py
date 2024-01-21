@@ -13,7 +13,7 @@ class BaseResNet18(nn.Module):
         return self.resnet(x)
 
 # Multiply A (output of layer) and M and binarize (step 1+2)
-def activation_shaping(layer):
+def activation_shaping():
     def activation_shaping_hook(module, input, output):
         # attention random M à modifier
         M = torch.randint(0,2,(output.size()[0], output.size()[1]))
@@ -39,7 +39,7 @@ def call_activation_shaping_hook(self):
            
     # Every convolution
     for layer in layers:
-        Z = self.register_forward_hook(activation_shaping(layer))
+        Z = layer.register_forward_hook(activation_shaping())
         
     # pensez à detacher le hook
     return None
