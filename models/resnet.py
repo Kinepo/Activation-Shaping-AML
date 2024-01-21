@@ -16,7 +16,7 @@ class BaseResNet18(nn.Module):
 def activation_shaping(layer):
     def activation_shaping_hook(module, input, output):
         # attention random M à modifier
-        M = torch.rand(output.size()[0], output.size()[1])
+        M = torch.randint(0,2,(output.size()[0], output.size()[1]))
         Z = torch.mul(output, M)
         for i in range(Z.size()[0]):
             for j in range(Z.size()[1]):
