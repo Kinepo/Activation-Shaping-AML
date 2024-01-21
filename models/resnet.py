@@ -23,6 +23,7 @@ def activation_shaping():
                 if Z[i][j] != 0.0:
                     Z[i][j] = 1.0
         return Z
+    return activation_shaping_hook()
     
 # Attach hook (activation_shaping_hook)
 def call_activation_shaping_hook(self):
