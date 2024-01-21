@@ -13,14 +13,16 @@ class BaseResNet18(nn.Module):
         return self.resnet(x)
 
 # Multiply A (output of layer) and M and binarize (step 1+2)
-def activation_shaping():
+def activation_shaping(Mt):
     def activation_shaping_hook(module, input, output):
         # attention random M à modifier
-        M = torch.randint(0,2,output.size())
+        """M = torch.randint(0,2,output.size())
         M = M.cuda()
-        Z = torch.mul(output, M)
-        Z = torch.where(Z > 0, 1.0, 0.0)
-        Z = Z.cuda()
+        Z = torch.mul(output, M)"""
+
+        Mt = torch.where(Mt > 0, 1.0, 0.0)
+        output = torch.where(output > 0, 1.0, 0.0) * Mt
+        #Z = Z.cuda()
         """
         for i in range(Z.size()[0]):
             for j in range(Z.size()[1]):
@@ -28,6 +30,7 @@ def activation_shaping():
                     Z[i][j] = 1.0
         return Z
         """
+        return output
     return activation_shaping_hook
     
 # Attach hook (activation_shaping_hook)
@@ -51,14 +54,20 @@ def call_activation_shaping_hook(self):
     # pensez à detacher le hook
     return None
 
+
+
+
 class ASHResNet18(nn.Module):
     def __init__(self):
         super(ASHResNet18, self).__init__()
         self.resnet = resnet18(weights=ResNet18_Weights)
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, 7)
 
-    def forward(self, x):
-        call_activation_shaping_hook(self)
+    def get_activation_map(self, targ_x):
+        return None
+
+    def forward(self, x, targ_x):
+        Mt = call_activation_shaping_hook(targ_x)
         return self.resnet(x)
 
 ######################################################
