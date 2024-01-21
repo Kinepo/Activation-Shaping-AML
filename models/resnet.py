@@ -38,8 +38,8 @@ def call_activation_shaping_hook(self):
     # for i in range (0, len(layers), 3):
            
     # Every convolution
-    for layer in layers:
-        Z = layer.register_forward_hook(activation_shaping())
+    for name in layers:
+        Z = layers[name].register_forward_hook(activation_shaping())
         
     # pensez à detacher le hook
     return None
