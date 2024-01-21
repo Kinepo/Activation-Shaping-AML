@@ -9,25 +9,40 @@ class BaseResNet18(nn.Module):
         self.resnet = resnet18(weights=ResNet18_Weights)
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, 7)
 
-    def hook(model, input, output):
-        print("coucou")
-        return output
-
     def forward(self, x):
-        target_layer = self.resnet.layer4[0].bn1
-        target_layer.register_forward_hook(self.hook())
         return self.resnet(x)
 
+# Multiply A (output of layer) and M and binarize (step 1+2)
+def activation_shaping(layer):
+    def activation_shaping_hook(module, input, output):
+        # attention random M à modifier
+        M = torch.rand(output.size()[0], output.size()[1])
+        Z = torch.mul(output, M)
+        for i in range(Z.size()[0]):
+            for j in range(Z.size()[1]):
+                if Z[i][j] != 0.0:
+                    Z[i][j] = 1.0
+        return Z
+    
+# Attach hook (activation_shaping_hook)
+def call_activation_shaping_hook(self):
+    layers = {}
 
-def activation_shaping_hook(module, input, output):
-    m = torch.rand(output.size()[0], output.size()[1])
-    z = torch.mul(output, m)
-    for i in range(z.size()[0]):
-        for j in range(z.size()[1]):
-            if z[i][j] != 0.0:
-                z[i][j] = 1.0
-    return z
+    # Get all conv layers
+    # à tester et modifier
+    for name, layer in self.named_modules():
+       if isinstance(layer, nn.Conv2d):
+           layers[name] = layer
 
+    # Every 3 convolutions          
+    # for i in range (0, len(layers), 3):
+           
+    # Every convolution
+    for layer in layers:
+        Z = self.register_forward_hook(activation_shaping(layer))
+        
+    # pensez à detacher le hook
+    return None
 
 class ASHResNet18(nn.Module):
     def __init__(self):
@@ -36,6 +51,7 @@ class ASHResNet18(nn.Module):
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, 7)
 
     def forward(self, x):
+        call_activation_shaping_hook(self)
         return self.resnet(x)
 
 ######################################################
