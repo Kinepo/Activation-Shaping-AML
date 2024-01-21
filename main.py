@@ -63,9 +63,9 @@ def train(model, data):
             with torch.autocast(device_type=CONFIG.device, dtype=torch.float16, enabled=True):
 
                 if CONFIG.experiment in ['baseline']:
-                    x, y = batch
-                    x, y = x.to(CONFIG.device), y.to(CONFIG.device)
-                    loss = F.cross_entropy(model(x), y)
+                    x, y, targ_x = batch
+                    x, y, targ_x = x.to(CONFIG.device), y.to(CONFIG.device), targ_x.to(CONFIG.device)
+                    loss = F.cross_entropy(model(x, targ_x), y)
 
                 ######################################################
                 #elif... TODO: Add here train logic for the other experiments
