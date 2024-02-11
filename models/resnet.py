@@ -31,8 +31,9 @@ class ASHResNet18(nn.Module):
         hook.remove()
 
         def hook_2(module, input, output):
-            M = torch.where(machin > 0, 1.0, 0.0)
-            output = torch.where(output > 0, 1.0, 0.0) * M
+            #M = torch.where(machin > 0, 1.0, 0.0)
+            #output = torch.where(output > 0, 1.0, 0.0) * M
+            output = output * machin
             hook.remove()
             return output
 
