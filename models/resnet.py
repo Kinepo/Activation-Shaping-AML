@@ -16,10 +16,22 @@ class BaseResNet18(nn.Module):
 def activation_shaping():
     def activation_shaping_hook(module, input, output):
         # attention random M à modifier
+
+        ATopK = torch.topk(output.flatten(), 200)
+
+
+
+
+
         M = torch.randint(0,2,output.size())
         M = M.cuda()
-        Z = torch.mul(output, M)
-        Z = torch.where(Z > 0, 1.0, 0.0)
+
+        M = torch.where(M not in ATopK[0], 1.0, 0.0)
+
+        #Z = torch.mul(output, M)
+        #Z = torch.where(Z > 0, 1.0, 0.0)
+
+        Z = torch.where(output > 0, 1.0, 0.0) * M
         Z = Z.cuda()
         """
         for i in range(Z.size()[0]):
