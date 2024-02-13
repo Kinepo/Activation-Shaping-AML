@@ -23,11 +23,12 @@ class ASHResNet18(nn.Module):
 
     def point_2(self):
         def hook_2(module, input, output):
-            M = torch.randint(0, 2, output.size())
-            Z = torch.mul(output, M)
-            Z = torch.where(Z > 0, 1.0, 0.0)
-            hook.remove()
-            return Z
+            with torch.autocast(device_type=CONFIG.device, enabled=False):
+                M = torch.randint(0, 2, output.size())
+                Z = torch.mul(output, M)
+                Z = torch.where(Z > 0, 1.0, 0.0)
+                hook.remove()
+                return Z
 
         layer = self.resnet.layer4[0].bn1
         hook = layer.register_forward_hook(hook_2)
