@@ -12,7 +12,7 @@ import numpy as np
 from parse_args import parse_arguments
 
 from dataset import PACS
-from models.resnet import BaseResNet18 , ASHResNet18 , call_activation_shaping_hook , activation_shaping
+from models.resnet import BaseResNet18 , ASHResNet18
 
 from globals import CONFIG
 
