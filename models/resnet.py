@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision.models import resnet18, ResNet18_Weights
+from globals import CONFIG
 
 
 class BaseResNet18(nn.Module):
@@ -33,8 +34,9 @@ class ASHResNet18(nn.Module):
         return None
 
     def forward(self, x):
-        self.point_2()
-        return self.resnet(x)
+        with torch.autocast(device_type=CONFIG.device, enabled=False):
+            self.point_2()
+            return self.resnet(x)
 
 ######################################################
 # TODO: either define the Activation Shaping Module as a nn.Module
