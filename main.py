@@ -103,6 +103,8 @@ def main():
 
     # Load model
     if CONFIG.experiment in ['baseline']:
+        model = BaseResNet18()
+    elif CONFIG.experiment in ['ASHResNet18']:
         model = ASHResNet18()
 
     ######################################################
