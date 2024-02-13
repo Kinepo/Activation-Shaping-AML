@@ -23,8 +23,7 @@ class ASHResNet18(nn.Module):
 
     def point_2(self):
         def hook_2(module, input, output):
-            with torch.autocast(device_type=CONFIG.device, enabled=False):
-                M = torch.randint(0, 2, output.size())
+                M = torch.randint(0, 2, output.size(), device=CONFIG.device)
                 Z = torch.mul(output, M)
                 Z = torch.where(Z > 0, 1.0, 0.0)
                 hook.remove()
@@ -35,7 +34,6 @@ class ASHResNet18(nn.Module):
         return None
 
     def forward(self, x):
-        with torch.autocast(device_type=CONFIG.device, enabled=False):
             self.point_2()
             return self.resnet(x)
 
