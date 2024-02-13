@@ -12,44 +12,6 @@ class BaseResNet18(nn.Module):
     def forward(self, x):
         return self.resnet(x)
 
-# Multiply A (output of layer) and M and binarize (step 1+2)
-def activation_shaping():
-    def activation_shaping_hook(module, input, output):
-        # attention random M à modifier
-        M = torch.randint(0,2,output.size())
-        M = M.cuda()
-        Z = torch.mul(output, M)
-        Z = torch.where(Z > 0, 1.0, 0.0)
-        Z = Z.cuda()
-        """
-        for i in range(Z.size()[0]):
-            for j in range(Z.size()[1]):
-                if Z[i][j] != 0.0:
-                    Z[i][j] = 1.0
-        return Z
-        """
-    return activation_shaping_hook
-    
-# Attach hook (activation_shaping_hook)
-def call_activation_shaping_hook(self):
-    layers = {}
-
-    # Get all conv layers
-    # à tester et modifier
-    for name, layer in self.named_modules():
-       if isinstance(layer, nn.Conv2d):
-           layers[name] = layer
-
-    # Every 3 convolutions          
-    # for i in range (0, len(layers), 3):
-           
-    # Every convolution
-    self.resnet.layer4[0].bn1.register_forward_hook(activation_shaping())
-    """for name in layers:
-        Z = layers[name].register_forward_hook(activation_shaping())"""
-        
-    # pensez à detacher le hook
-    return None
 
 class ASHResNet18(nn.Module):
     def __init__(self):
@@ -57,8 +19,21 @@ class ASHResNet18(nn.Module):
         self.resnet = resnet18(weights=ResNet18_Weights)
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, 7)
 
+
+    def point_2(self):
+        def hook_2(module, input, output):
+            M = torch.randint(0, 2, output.size())
+            Z = torch.mul(output, M)
+            Z = torch.where(Z > 0, 1.0, 0.0)
+            hook.remove()
+            return Z
+
+        layer = self.resnet.layer4[0].bn1
+        hook = layer.register_forward_hook(hook_2)
+        return None
+
     def forward(self, x):
-        call_activation_shaping_hook(self)
+        self.point_2()
         return self.resnet(x)
 
 ######################################################
