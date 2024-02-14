@@ -12,7 +12,7 @@ import numpy as np
 from parse_args import parse_arguments
 
 from dataset import PACS
-from models.resnet import BaseResNet18 , ASHResNet18
+from models.resnet import BaseResNet18 , ASHResNet18, ASHResNet18_DA
 
 from globals import CONFIG
 
@@ -62,7 +62,7 @@ def train(model, data):
             # Compute loss
             with torch.autocast(device_type=CONFIG.device, dtype=torch.float16, enabled=True):
 
-                if CONFIG.experiment in ['baseline']:
+                if CONFIG.experiment in ['ASHResNet18_DA']:
                     x, y, targ_x = batch
                     x, y, targ_x = x.to(CONFIG.device), y.to(CONFIG.device), targ_x.to(CONFIG.device)
                     loss = F.cross_entropy(model(x, targ_x), y)
@@ -102,8 +102,8 @@ def main():
     data = PACS.load_data()
 
     # Load model
-    if CONFIG.experiment in ['baseline']:
-        model = ASHResNet18()
+    if CONFIG.experiment in ['ASHResNet18_DA']:
+        model = ASHResNet18_DA()
 
     ######################################################
     #elif... TODO: Add here model loading for the other experiments (eg. DA and optionally DG)

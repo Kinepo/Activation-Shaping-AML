@@ -8,6 +8,10 @@ def _clear_args(parsed_args):
 def parse_arguments():
     parser = ArgumentParser()
 
+    parser.add_argument('--num_layer', type=int, default=4)
+    parser.add_argument('--num_block', type=int, default=0)
+    parser.add_argument('--num_bn', type=int, default=1)
+
     parser.add_argument('--seed', type=int, default=0, help='Seed used for deterministic behavior')
     parser.add_argument('--test_only', action='store_true', help='Whether to skip training')
     parser.add_argument('--cpu', action='store_true', help='Whether to force the usage of CPU')
