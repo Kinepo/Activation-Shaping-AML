@@ -12,6 +12,6 @@ python main.py \
 --batch_size=128 \
 --num_workers=5 \
 --grad_accum_steps=1 \
---num_layer = ${num_layer_choose} \
---num_block = ${num_block_choose} \
---num_bn = ${num_bn_choose}
+--num_layer=${num_layer_choose} \
+--num_block=${num_block_choose} \
+--num_bn=${num_bn_choose}
