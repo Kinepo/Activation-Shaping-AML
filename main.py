@@ -62,7 +62,11 @@ def train(model, data):
             # Compute loss
             with torch.autocast(device_type=CONFIG.device, dtype=torch.float16, enabled=True):
 
-                if CONFIG.experiment in ['ASHResNet18_DA']:
+                if CONFIG.experiment in ['baseline','ASHResNet18']:
+                    x, y = batch
+                    x, y = x.to(CONFIG.device), y.to(CONFIG.device)
+                    loss = F.cross_entropy(model(x), y)
+                elif CONFIG.experiment in ['ASHResNet18_DA']:
                     x, y, targ_x = batch
                     x, y, targ_x = x.to(CONFIG.device), y.to(CONFIG.device), targ_x.to(CONFIG.device)
                     loss = F.cross_entropy(model(x, targ_x), y)
@@ -102,7 +106,11 @@ def main():
     data = PACS.load_data()
 
     # Load model
-    if CONFIG.experiment in ['ASHResNet18_DA']:
+    if CONFIG.experiment in ['baseline']:
+        model = BaseResNet18()
+    elif CONFIG.experiment in ['ASHResNet18']:
+        model = ASHResNet18()
+    elif CONFIG.experiment in ['ASHResNet18_DA']:
         model = ASHResNet18_DA()
 
     ######################################################
