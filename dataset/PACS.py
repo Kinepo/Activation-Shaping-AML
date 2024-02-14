@@ -29,7 +29,28 @@ def load_data():
     test_transform = get_transform(size=224, mean=mean, std=std, preprocess=False)
 
     # Load examples & create Dataset
-    if CONFIG.experiment in ['ASHResNet18_DA']:
+    if CONFIG.experiment in ['baseline','ASHResNet18']:
+        source_examples, target_examples = [], []
+
+        # Load source
+        with open(os.path.join(CONFIG.dataset_args['root'], f"{CONFIG.dataset_args['source_domain']}.txt"), 'r') as f:
+            lines = f.readlines()
+        for line in lines:
+            line = line.strip().split()
+            path, label = line[0].split('/')[1:], int(line[1])
+            source_examples.append((os.path.join(CONFIG.dataset_args['root'], *path), label))
+
+        # Load target
+        with open(os.path.join(CONFIG.dataset_args['root'], f"{CONFIG.dataset_args['target_domain']}.txt"), 'r') as f:
+            lines = f.readlines()
+        for line in lines:
+            line = line.strip().split()
+            path, label = line[0].split('/')[1:], int(line[1])
+            target_examples.append((os.path.join(CONFIG.dataset_args['root'], *path), label))
+
+        train_dataset = BaseDataset(source_examples, transform=train_transform)
+        test_dataset = BaseDataset(target_examples, transform=test_transform)
+    elif CONFIG.experiment in ['ASHResNet18_DA']:
         source_examples, target_examples = [], []
 
         # Load source

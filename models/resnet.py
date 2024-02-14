@@ -14,7 +14,6 @@ class BaseResNet18(nn.Module):
         return self.resnet(x)
 
 
-
 class ASHResNet18_DA(nn.Module):
     def __init__(self):
         super(ASHResNet18_DA, self).__init__()
@@ -99,6 +98,7 @@ class ASHResNet18_DA(nn.Module):
         if targ_x is not None:
             self.point_3(targ_x)
         return self.resnet(x)
+
 
 class ASHResNet18(nn.Module):
     def __init__(self):
