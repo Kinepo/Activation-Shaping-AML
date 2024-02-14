@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision.models import resnet18, ResNet18_Weights
+from globals import CONFIG
 
 
 class BaseResNet18(nn.Module):
@@ -25,8 +26,35 @@ class ASHResNet18_DA(nn.Module):
             global machin
             machin = output
 
-        layer = self.resnet.layer4[0].bn1
-        hook = layer.register_forward_hook(hook_1)
+        match CONFIG.num_layer:
+            case 1:
+                layer = self.resnet.layer1[CONFIG.num_block]
+                if CONFIG.num_bn == 1:
+                    hook = layer.bn1.register_forward_hook(hook_1)
+                else:
+                    hook = layer.bn2.register_forward_hook(hook_1)
+            case 2:
+                layer = self.resnet.layer2[CONFIG.num_block]
+                if CONFIG.num_bn == 1:
+                    hook = layer.bn1.register_forward_hook(hook_1)
+                else:
+                    hook = layer.bn2.register_forward_hook(hook_1)
+            case 3:
+                layer = self.resnet.layer3[CONFIG.num_block]
+                if CONFIG.num_bn == 1:
+                    hook = layer.bn1.register_forward_hook(hook_1)
+                else:
+                    hook = layer.bn2.register_forward_hook(hook_1)
+            case 4:
+                layer = self.resnet.layer4[CONFIG.num_block]
+                if CONFIG.num_bn == 1:
+                    hook = layer.bn1.register_forward_hook(hook_1)
+                else:
+                    hook = layer.bn2.register_forward_hook(hook_1)
+            case _:
+                layer = self.resnet.layer4[0].bn1
+                hook = layer.register_forward_hook(hook_1)
+
         self.resnet(targ_x)
         hook.remove()
 
@@ -36,8 +64,35 @@ class ASHResNet18_DA(nn.Module):
             hook.remove()
             return output
 
-        hook = layer.register_forward_hook(hook_2)
-        # penser à detacher le hook si on part sur du multy layer
+        match CONFIG.num_layer:
+            case 1:
+                layer = self.resnet.layer1[CONFIG.num_block]
+                if CONFIG.num_bn == 1:
+                    hook = layer.bn1.register_forward_hook(hook_2)
+                else:
+                    hook = layer.bn2.register_forward_hook(hook_2)
+            case 2:
+                layer = self.resnet.layer2[CONFIG.num_block]
+                if CONFIG.num_bn == 1:
+                    hook = layer.bn1.register_forward_hook(hook_2)
+                else:
+                    hook = layer.bn2.register_forward_hook(hook_2)
+            case 3:
+                layer = self.resnet.layer3[CONFIG.num_block]
+                if CONFIG.num_bn == 1:
+                    hook = layer.bn1.register_forward_hook(hook_2)
+                else:
+                    hook = layer.bn2.register_forward_hook(hook_2)
+            case 4:
+                layer = self.resnet.layer4[CONFIG.num_block]
+                if CONFIG.num_bn == 1:
+                    hook = layer.bn1.register_forward_hook(hook_2)
+                else:
+                    hook = layer.bn2.register_forward_hook(hook_2)
+            case _:
+                layer = self.resnet.layer4[0].bn1
+                hook = layer.register_forward_hook(hook_2)
+
         return None
 
     def forward(self, x, targ_x=None):
