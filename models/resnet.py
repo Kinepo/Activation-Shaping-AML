@@ -20,9 +20,6 @@ class ASHResNet18(nn.Module):
         self.resnet = resnet18(weights=ResNet18_Weights)
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, 7)
 
-    def find_hook(self,m):
-        print(type(m).__name__)
-
 
     def point_2(self):
         def hook_2(module, input, output):
@@ -37,7 +34,6 @@ class ASHResNet18(nn.Module):
         return None
 
     def forward(self, x):
-            self.apply(self.find_hook)
             self.point_2()
             return self.resnet(x)
 
