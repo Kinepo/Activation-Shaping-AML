@@ -23,7 +23,7 @@ class ASHResNet18_DA(nn.Module):
     def point_3(self, targ_x):
         def hook_1(module, input, output):
             global machin
-            machin = output
+            machin = output.clone().detach
 
         match CONFIG.num_layer:
             case 1:
@@ -54,7 +54,9 @@ class ASHResNet18_DA(nn.Module):
                 layer = self.resnet.layer4[0].bn1
                 hook = layer.register_forward_hook(hook_1)
 
-        self.resnet(targ_x)
+        with torch.autocast(device_type=CONFIG.device, enabled=False):
+            with torch.no_grad():
+                self.resnet(targ_x)
         hook.remove()
 
         def hook_2(module, input, output):
