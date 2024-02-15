@@ -110,11 +110,9 @@ class ASHResNet18(nn.Module):
 
     def point_2(self):
         def hook_2(module, input, output):
-            M = torch.randint(0, 2, output.size(), device=CONFIG.device)
-            Z = torch.mul(output, M)
-            Z = torch.where(Z > 0, 1.0, 0.0)
+            output = torch.where(torch.mul(output, torch.randint(0, 2, output.size(), device=CONFIG.device)) > 0, 1.0, 0.0)
             hook.remove()
-            return Z
+            return output
 
         match CONFIG.num_layer:
             case 1:
