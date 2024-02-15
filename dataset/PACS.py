@@ -6,6 +6,7 @@ from dataset.utils import SeededDataLoader
 
 from globals import CONFIG
 
+
 def get_transform(size, mean, std, preprocess):
     transform = []
     if preprocess:
@@ -24,12 +25,12 @@ def load_data():
     CONFIG.data_input_size = (3, 224, 224)
 
     # Create transforms
-    mean, std = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225) # ImageNet Pretrain statistics
+    mean, std = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)  # ImageNet Pretrain statistics
     train_transform = get_transform(size=224, mean=mean, std=std, preprocess=True)
     test_transform = get_transform(size=224, mean=mean, std=std, preprocess=False)
 
     # Load examples & create Dataset
-    if CONFIG.experiment in ['baseline','ASHResNet18']:
+    if CONFIG.experiment in ['baseline', 'ASHResNet18', 'ASHResNet18_BA1', 'ASHResNet18_BA2']:
         source_examples, target_examples = [], []
 
         # Load source
@@ -50,7 +51,7 @@ def load_data():
 
         train_dataset = BaseDataset(source_examples, transform=train_transform)
         test_dataset = BaseDataset(target_examples, transform=test_transform)
-    elif CONFIG.experiment in ['ASHResNet18_DA']:
+    elif CONFIG.experiment in ['ASHResNet18_DA', 'ASHResNet18_DA_BA1', 'ASHResNet18_DA_BA2']:
         source_examples, target_examples = [], []
 
         # Load source
@@ -73,8 +74,7 @@ def load_data():
         test_dataset = BaseDataset(target_examples, transform=test_transform)
 
     ######################################################
-    #elif... TODO: Add here how to create the Dataset object for the other experiments
-
+    # elif... TODO: Add here how to create the Dataset object for the other experiments
 
     ######################################################
 
