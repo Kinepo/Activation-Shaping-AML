@@ -60,8 +60,7 @@ class ASHResNet18_DA(nn.Module):
         hook.remove()
 
         def hook_2(module, input, output):
-            M = torch.where(machin > 0, 1.0, 0.0)
-            output = torch.where(output > 0, 1.0, 0.0) * M
+            output = torch.mul(torch.where(output > 0, 1.0, 0.0), torch.where(machin > 0, 1.0, 0.0))
             hook.remove()
             return output
 
@@ -111,7 +110,7 @@ class ASHResNet18(nn.Module):
     def point_2(self):
         def hook_2(module, input, output):
             if CONFIG.experiment in ['ASHResNet18']:
-                output = torch.where(torch.mul(output, torch.randint(0, 2, output.size(), device=CONFIG.device)) > 0, 1.0, 0.0)
+                output = torch.mul(torch.where(output > 0, 1.0, 0.0), torch.randint(0, 2, output.size(), device=CONFIG.device))
                 hook.remove()
                 return output
             elif CONFIG.experiment in ['ASHResNet18_BA1']:
