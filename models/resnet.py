@@ -60,9 +60,18 @@ class ASHResNet18_DA(nn.Module):
         hook.remove()
 
         def hook_2(module, input, output):
-            output = torch.mul(torch.where(output > 0, 1.0, 0.0), torch.where(machin > 0, 1.0, 0.0))
-            hook.remove()
-            return output
+            if CONFIG.experiment in ['ASHResNet18_DA']:
+                output = torch.mul(torch.where(output > 0, 1.0, 0.0), torch.where(machin > 0, 1.0, 0.0))
+                hook.remove()
+                return output
+            elif CONFIG.experiment in ['ASHResNet18_DA_BA1']:
+                output = output * machin
+                hook.remove()
+                return output
+            elif CONFIG.experiment in ['ASHResNet18_DA_BA2']:
+                output = output * torch.where(torch.where(machin > 0, 1.0, 0.0) not in torch.topk(output.flatten(), 200)[0], 1.0, 0.0)
+                hook.remove()
+                return output
 
         match CONFIG.num_layer:
             case 1:
