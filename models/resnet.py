@@ -69,7 +69,8 @@ class ASHResNet18_DA(nn.Module):
                 hook.remove()
                 return output
             elif CONFIG.experiment in ['ASHResNet18_DA_BA2']:
-                output = output * torch.where(torch.where(machin > 0, 1.0, 0.0) not in torch.topk(output.flatten(), 200)[0], 1.0, 0.0)
+                output = output * torch.where(
+                    torch.where(machin > 0, 1.0, 0.0) not in torch.topk(output.flatten(), 200)[0], 1.0, 0.0)
                 hook.remove()
                 return output
 
@@ -119,15 +120,17 @@ class ASHResNet18(nn.Module):
     def point_2(self):
         def hook_2(module, input, output):
             if CONFIG.experiment in ['ASHResNet18']:
-                output = torch.mul(torch.where(output > 0, 1.0, 0.0), torch.randint(0, 2, output.size(), device=CONFIG.device))
+                output = torch.mul(torch.where(output > 0, 1.0, 0.0), torch.bernoulli(torch.full(output.size(), 0.5)))
                 hook.remove()
                 return output
             elif CONFIG.experiment in ['ASHResNet18_BA1']:
-                output = output * torch.randint(0, 2, output.size(), device=CONFIG.device)
+                output = output * torch.bernoulli(torch.full(output.size(), 0.5))
                 hook.remove()
                 return output
             elif CONFIG.experiment in ['ASHResNet18_BA1']:
-                output = output * torch.where(torch.randint(0, 2, output.size(), device=CONFIG.device) not in torch.topk(output.flatten(), 200)[0], 1.0, 0.0)
+                output = output * torch.where(
+                    torch.bernoulli(torch.full(output.size(), 0.5)) not in torch.topk(output.flatten(), 200)[
+                        0], 1.0, 0.0)
                 hook.remove()
                 return output
 
