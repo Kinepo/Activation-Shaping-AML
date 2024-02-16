@@ -8,7 +8,7 @@ def _clear_args(parsed_args):
 def parse_arguments():
     parser = ArgumentParser()
 
-    parser.add_argument('--list_layers', type=list, default=[[4, 0, 1]])
+    parser.add_argument('--list_layers', type=str, default="[[4, 0, 1]]")
     parser.add_argument('--hyper_parameter', type=int, default=200)
     parser.add_argument('--random_parameter', type=float, default=0.5)
 

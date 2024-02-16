@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torchvision.models import resnet18, ResNet18_Weights
 from globals import CONFIG
+import ast
 
 
 class BaseResNet18(nn.Module):
@@ -54,7 +55,7 @@ class ASHResNet18_DA(nn.Module):
                 hook2.pop()
                 return output
 
-        for _ in reversed(CONFIG.list_layers):
+        for _ in reversed(ast.literal_eval(CONFIG.list_layers)):
             match _[0]:
                 case 1:
                     layer = self.resnet.layer1[_[1]]
@@ -133,7 +134,7 @@ class ASHResNet18(nn.Module):
                 return output
 
         hook = []
-        for _ in reversed(CONFIG.list_layers):
+        for _ in reversed(ast.literal_eval(CONFIG.list_layers)):
             match _[0]:
                 case 1:
                     layer = self.resnet.layer1[_[1]]
