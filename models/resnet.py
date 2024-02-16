@@ -47,9 +47,9 @@ class ASHResNet18_DA(nn.Module):
                 hook2.pop()
                 return output
             elif CONFIG.experiment in ['ASHResNet18_DA_BA2']:
-                output = output * torch.where(
-                    torch.where(list_of_source[-1] > 0, 1.0, 0.0) not in
-                    torch.topk(output.flatten(), k=CONFIG.hyper_parameter)[0], 1.0, 0.0)
+                M = torch.zeros(output.size(), device=CONFIG.device)
+                M[torch.topk(output, k=CONFIG.hyper_parameter)[1]] = 1.0
+                output = output * torch.mul(torch.where(list_of_source[-1] > 0, 1.0, 0.0), M)
                 list_of_source.pop()
                 hook2[-1].remove()
                 hook2.pop()
@@ -124,11 +124,10 @@ class ASHResNet18(nn.Module):
                 hook.pop()
                 return output
             elif CONFIG.experiment in ['ASHResNet18_BA2']:
-                output = output * torch.where(
-                    torch.bernoulli(
-                        torch.full(output.size(), fill_value=CONFIG.random_parameter, device=CONFIG.device)) not in
-                    torch.topk(output.flatten(), k=CONFIG.hyper_parameter)[
-                        0], 1.0, 0.0)
+                M = torch.zeros(output.size(), device=CONFIG.device)
+                M[torch.topk(output, k=CONFIG.hyper_parameter)[1]] = 1.0
+                output = output * torch.mul(torch.bernoulli(
+                    torch.full(output.size(), fill_value=CONFIG.random_parameter, device=CONFIG.device)), M)
                 hook[-1].remove()
                 hook.pop()
                 return output
