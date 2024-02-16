@@ -54,7 +54,7 @@ class ASHResNet18_DA(nn.Module):
                 hook2.pop()
                 return output
 
-        for _ in CONFIG.list_layers.reverse():
+        for _ in reversed(CONFIG.list_layers):
             match _[0]:
                 case 1:
                     layer = self.resnet.layer1[_[1]]
@@ -133,7 +133,7 @@ class ASHResNet18(nn.Module):
                 return output
 
         hook = []
-        for _ in CONFIG.list_layers.reverse():
+        for _ in reversed(CONFIG.list_layers):
             match _[0]:
                 case 1:
                     layer = self.resnet.layer1[_[1]]
