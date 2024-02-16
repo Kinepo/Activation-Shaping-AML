@@ -123,7 +123,7 @@ class ASHResNet18(nn.Module):
                 hook[-1].remove()
                 hook.pop()
                 return output
-            elif CONFIG.experiment in ['ASHResNet18_BA1']:
+            elif CONFIG.experiment in ['ASHResNet18_BA2']:
                 output = output * torch.where(
                     torch.bernoulli(
                         torch.full(output.size(), fill_value=CONFIG.random_parameter, device=CONFIG.device)) not in
