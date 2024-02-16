@@ -120,16 +120,16 @@ class ASHResNet18(nn.Module):
     def point_2(self):
         def hook_2(module, input, output):
             if CONFIG.experiment in ['ASHResNet18']:
-                output = torch.mul(torch.where(output > 0, 1.0, 0.0), torch.bernoulli(torch.full(output.size(), 0.5)))
+                output = torch.mul(torch.where(output > 0, 1.0, 0.0), torch.bernoulli(torch.full(output.size(), 0.5, device=CONFIG.device)))
                 hook.remove()
                 return output
             elif CONFIG.experiment in ['ASHResNet18_BA1']:
-                output = output * torch.bernoulli(torch.full(output.size(), 0.5))
+                output = output * torch.bernoulli(torch.full(output.size(), 0.5,device=CONFIG.device))
                 hook.remove()
                 return output
             elif CONFIG.experiment in ['ASHResNet18_BA1']:
                 output = output * torch.where(
-                    torch.bernoulli(torch.full(output.size(), 0.5)) not in torch.topk(output.flatten(), 200)[
+                    torch.bernoulli(torch.full(output.size(), 0.5,device=CONFIG.device)) not in torch.topk(output.flatten(), 200)[
                         0], 1.0, 0.0)
                 hook.remove()
                 return output
