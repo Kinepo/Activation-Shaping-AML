@@ -66,7 +66,7 @@ def train(model, data):
                     x, y = batch
                     x, y = x.to(CONFIG.device), y.to(CONFIG.device)
                     loss = F.cross_entropy(model(x), y)
-                elif CONFIG.experiment in ['ASHResNet18_DA_BA1', 'ASHResNet18_DA_BA2']:
+                elif CONFIG.experiment in ['ASHResNet18_DA','ASHResNet18_DA_BA1', 'ASHResNet18_DA_BA2']:
                     x, y, targ_x = batch
                     x, y, targ_x = x.to(CONFIG.device), y.to(CONFIG.device), targ_x.to(CONFIG.device)
                     loss = F.cross_entropy(model(x, targ_x), y)
