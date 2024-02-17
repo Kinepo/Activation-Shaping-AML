@@ -92,10 +92,10 @@ class ASHResNet18_DA(nn.Module):
 
         with torch.autocast(device_type=CONFIG.device, enabled=False):
             with torch.no_grad():
-                if CONFIG.activate_evalforDA:
+                if CONFIG.activate_evalforDA == "True":
                     self.eval()
                 self.resnet(targ_x)
-                if CONFIG.activate_evalforDA:
+                if CONFIG.activate_evalforDA == "True":
                     self.train()
 
         return None

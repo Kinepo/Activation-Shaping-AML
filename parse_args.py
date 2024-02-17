@@ -11,7 +11,7 @@ def parse_arguments():
     parser.add_argument('--list_layers', type=str, default="[[4, 0, 1]]")
     parser.add_argument('--hyper_parameter', type=int, default=200)
     parser.add_argument('--random_parameter', type=float, default=0.5)
-    parser.add_argument('--activate_evalforDA', type=bool, default=False)
+    parser.add_argument('--activate_evalforDA', type=str, default="False")
 
     parser.add_argument('--seed', type=int, default=0, help='Seed used for deterministic behavior')
     parser.add_argument('--test_only', action='store_true', help='Whether to skip training')
