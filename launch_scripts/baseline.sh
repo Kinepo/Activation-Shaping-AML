@@ -4,6 +4,8 @@ name_folder=${3}
 list_layers_choose=${4}
 hyper_parameter_choose=${5}
 random_parameter_choose=${6}
+activate_evalforDA_choose=${7}
+
 
 python main.py \
 --experiment=${experiment_choose} \
@@ -14,4 +16,5 @@ python main.py \
 --grad_accum_steps=1 \
 --list_layers=${list_layers_choose} \
 --hyper_parameter=${hyper_parameter_choose} \
---random_parameter=${random_parameter_choose}
+--random_parameter=${random_parameter_choose} \
+--activate_evalforDA=${activate_evalforDA_choose}
