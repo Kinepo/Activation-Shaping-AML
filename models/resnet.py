@@ -26,6 +26,7 @@ class ASHResNet18_DA(nn.Module):
         global list_of_source
         list_of_source = []
         hook1 = []
+        global hook2
         hook2 = []
 
         def hook_1(module, input, output):
@@ -61,34 +62,34 @@ class ASHResNet18_DA(nn.Module):
                     layer = self.resnet.layer1[_[1]]
                     if _[2] == 1:
                         hook1.append(layer.bn1.register_forward_hook(hook_1))
-                        hook2.append(layer.bn1.register_forward_hook(hook_2))
+                        # hook2.append(layer.bn1.register_forward_hook(hook_2))
                     else:
                         hook1.append(layer.bn2.register_forward_hook(hook_1))
-                        hook2.append(layer.bn2.register_forward_hook(hook_2))
+                        # hook2.append(layer.bn2.register_forward_hook(hook_2))
                 case 2:
                     layer = self.resnet.layer2[_[1]]
                     if _[2] == 1:
                         hook1.append(layer.bn1.register_forward_hook(hook_1))
-                        hook2.append(layer.bn1.register_forward_hook(hook_2))
+                        # hook2.append(layer.bn1.register_forward_hook(hook_2))
                     else:
                         hook1.append(layer.bn2.register_forward_hook(hook_1))
-                        hook2.append(layer.bn2.register_forward_hook(hook_2))
+                        # hook2.append(layer.bn2.register_forward_hook(hook_2))
                 case 3:
                     layer = self.resnet.layer3[_[1]]
                     if _[2] == 1:
                         hook1.append(layer.bn1.register_forward_hook(hook_1))
-                        hook2.append(layer.bn1.register_forward_hook(hook_2))
+                        # hook2.append(layer.bn1.register_forward_hook(hook_2))
                     else:
                         hook1.append(layer.bn2.register_forward_hook(hook_1))
-                        hook2.append(layer.bn2.register_forward_hook(hook_2))
+                        # hook2.append(layer.bn2.register_forward_hook(hook_2))
                 case 4:
                     layer = self.resnet.layer4[_[1]]
                     if _[2] == 1:
                         hook1.append(layer.bn1.register_forward_hook(hook_1))
-                        hook2.append(layer.bn1.register_forward_hook(hook_2))
+                        # hook2.append(layer.bn1.register_forward_hook(hook_2))
                     else:
                         hook1.append(layer.bn2.register_forward_hook(hook_1))
-                        hook2.append(layer.bn2.register_forward_hook(hook_2))
+                        # hook2.append(layer.bn2.register_forward_hook(hook_2))
 
         with torch.autocast(device_type=CONFIG.device, enabled=False):
             with torch.no_grad():
@@ -97,6 +98,41 @@ class ASHResNet18_DA(nn.Module):
                 self.resnet(targ_x)
                 if CONFIG.activate_evalforDA == "True":
                     self.train()
+
+        for _ in reversed(ast.literal_eval(CONFIG.list_layers)):
+            match _[0]:
+                case 1:
+                    layer = self.resnet.layer1[_[1]]
+                    if _[2] == 1:
+                        # hook1.append(layer.bn1.register_forward_hook(hook_1))
+                        hook2.append(layer.bn1.register_forward_hook(hook_2))
+                    else:
+                        # hook1.append(layer.bn2.register_forward_hook(hook_1))
+                        hook2.append(layer.bn2.register_forward_hook(hook_2))
+                case 2:
+                    layer = self.resnet.layer2[_[1]]
+                    if _[2] == 1:
+                        # hook1.append(layer.bn1.register_forward_hook(hook_1))
+                        hook2.append(layer.bn1.register_forward_hook(hook_2))
+                    else:
+                        # hook1.append(layer.bn2.register_forward_hook(hook_1))
+                        hook2.append(layer.bn2.register_forward_hook(hook_2))
+                case 3:
+                    layer = self.resnet.layer3[_[1]]
+                    if _[2] == 1:
+                        # hook1.append(layer.bn1.register_forward_hook(hook_1))
+                        hook2.append(layer.bn1.register_forward_hook(hook_2))
+                    else:
+                        # hook1.append(layer.bn2.register_forward_hook(hook_1))
+                        hook2.append(layer.bn2.register_forward_hook(hook_2))
+                case 4:
+                    layer = self.resnet.layer4[_[1]]
+                    if _[2] == 1:
+                        # hook1.append(layer.bn1.register_forward_hook(hook_1))
+                        hook2.append(layer.bn1.register_forward_hook(hook_2))
+                    else:
+                        # hook1.append(layer.bn2.register_forward_hook(hook_1))
+                        hook2.append(layer.bn2.register_forward_hook(hook_2))
 
         return None
 
